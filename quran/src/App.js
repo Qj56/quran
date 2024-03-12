@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+// src/App.js
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { getChapters } from './quranapi/getChapiter';
 
 function App() {
+  const [chapters, setChapters] = useState([]);
+
+  useEffect(() => {
+    getChapters().then(data => {
+      if (data && data.chapters) {
+        setChapters(data.chapters);
+      }
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+        <header className="App-header">
+          {/* Affiche une liste de chapitres */}
+          <ul>
+            {chapters.map(chapter => (
+                <li key={chapter.id}>
+                  {/* Remplacer 'url-to-chapter' par l'URL appropriée */}
+                  <a href={`url-to-chapter/${chapter.id}`}>{chapter.name}</a>
+                </li>
+            ))}
+          </ul>
+        </header>
+      </div>
   );
 }
 
