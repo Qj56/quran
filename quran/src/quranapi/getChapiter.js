@@ -1,19 +1,32 @@
-// src/quranapi/getChapiter.js
+// getChapiter.js
 import axios from 'axios';
 
-export const getChapters = () => {
-    const config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: 'https://api.quran.com/api/v4/chapters',
-        headers: {
-            'Accept': 'application/json',
-        },
-    };
+const BASE_URL = 'https://api.quran.com/api/v4';
 
-    return axios(config)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(error);
-        });
+export const getChaptersList = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/chapters`);
+        return response.data.chapters;
+    } catch (error) {
+        console.error('Error fetching chapters:', error);
+        return [];
+    }
+};
+
+// Fonction mise à jour pour obtenir le contenu d'un chapitre en français
+export const getChapterContent = async (chapterNumber) => {
+    try {
+        const config = {
+            method: 'get',
+            url: `${BASE_URL}/chapters/${chapterNumber}/info`,
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        const response = await axios(config);
+        return response.data; // Retourne les données de la réponse
+    } catch (error) {
+        console.error(`Error fetching content for chapter ${chapterNumber}:`, error);
+        return {};
+    }
 };
